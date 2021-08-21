@@ -204,6 +204,7 @@ class MySubprocessProtocol(asyncio.SubprocessProtocol):
         self.transport = None
         self.connected = loop.create_future()
         self.completed = loop.create_future()
+        self.exited = loop.create_future()
         self.disconnects = {fd: loop.create_future() for fd in range(3)}
         self.data = {1: b'', 2: b''}
         self.returncode = None
@@ -236,6 +237,7 @@ class MySubprocessProtocol(asyncio.SubprocessProtocol):
     def process_exited(self):
         assert self.state == 'CONNECTED', self.state
         self.returncode = self.transport.get_returncode()
+        self.exited.set_result(None)
 
 
 class EventLoopTestsMixin:
@@ -1967,18 +1969,13 @@ class SubprocessTestsMixin:
 
     def test_subprocess_wait_no_same_group(self):
         # start the new process in a new session
-        proto = None
-        transp = None
-        def connect():
-            nonlocal proto
-            nonlocal transp
-            transp, proto = yield from self.loop.subprocess_shell(
-                functools.partial(MySubprocessProtocol, self.loop),
-                'exit 7', stdin=None, stdout=None, stderr=None,
-                start_new_session=True)
-        self.loop.run_until_complete(connect())
+        connect = self.loop.subprocess_shell(
+                        functools.partial(MySubprocessProtocol, self.loop),
+                        'exit 7', stdin=None, stdout=None, stderr=None,
+                        start_new_session=True)
+        transp, proto = self.loop.run_until_complete(connect)
         self.assertIsInstance(proto, MySubprocessProtocol)
-        self.loop.run_until_complete(proto.completed)
+        self.loop.run_until_complete(proto.exited)
         self.assertEqual(7, proto.returncode)
         transp.close()
 
