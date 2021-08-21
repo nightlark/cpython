@@ -1978,7 +1978,6 @@ class SubprocessTestsMixin:
         self.loop.run_until_complete(proto.completed)
         self.assertEqual(7, proto.returncode)
         transp.close()
-        self.loop.run_until_complete(proto.exited)
 
     def test_subprocess_exec_invalid_args(self):
         async def connect(**kwds):
