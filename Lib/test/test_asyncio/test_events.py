@@ -1969,10 +1969,10 @@ class SubprocessTestsMixin:
         # start the new process in a new session
         proto = None
         transp = None
-        async def connect():
+        def connect():
             nonlocal proto
             nonlocal transp
-            transp, proto = await self.loop.subprocess_shell(
+            transp, proto = yield from self.loop.subprocess_shell(
                 functools.partial(MySubprocessProtocol, self.loop),
                 'exit 7', stdin=None, stdout=None, stderr=None,
                 start_new_session=True)
