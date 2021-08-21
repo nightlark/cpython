@@ -1971,7 +1971,7 @@ class SubprocessTestsMixin:
                         functools.partial(MySubprocessProtocol, self.loop),
                         'exit 7', stdin=None, stdout=None, stderr=None,
                         start_new_session=True)
-        _, proto = yield self.loop.run_until_complete(connect)
+        _, proto = await self.loop.run_until_complete(connect)
         self.assertIsInstance(proto, MySubprocessProtocol)
         self.loop.run_until_complete(proto.completed)
         self.assertEqual(7, proto.returncode)
