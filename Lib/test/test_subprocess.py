@@ -267,7 +267,7 @@ class ProcessTestCase(BaseTestCase):
 
     def test_call_kwargs(self):
         # call() function with keyword args
-        newenv = os.environ.copy()
+        newenv = dict(os.environ)
         newenv["FRUIT"] = "banana"
         rc = subprocess.call([sys.executable, "-c",
                               'import sys, os;'
@@ -751,7 +751,7 @@ class ProcessTestCase(BaseTestCase):
             p.wait()
 
     def test_env(self):
-        newenv = os.environ.copy()
+        newenv = dict(os.environ)
         newenv["FRUIT"] = "orange"
         with subprocess.Popen([sys.executable, "-c",
                                'import sys,os;'
@@ -802,25 +802,25 @@ class ProcessTestCase(BaseTestCase):
 
     def test_invalid_env(self):
         # null character in the environment variable name
-        newenv = os.environ.copy()
+        newenv = dict(os.environ)
         newenv["FRUIT\0VEGETABLE"] = "cabbage"
         with self.assertRaises(ValueError):
             subprocess.Popen(ZERO_RETURN_CMD, env=newenv)
 
         # null character in the environment variable value
-        newenv = os.environ.copy()
+        newenv = dict(os.environ)
         newenv["FRUIT"] = "orange\0VEGETABLE=cabbage"
         with self.assertRaises(ValueError):
             subprocess.Popen(ZERO_RETURN_CMD, env=newenv)
 
         # equal character in the environment variable name
-        newenv = os.environ.copy()
+        newenv = dict(os.environ)
         newenv["FRUIT=ORANGE"] = "lemon"
         with self.assertRaises(ValueError):
             subprocess.Popen(ZERO_RETURN_CMD, env=newenv)
 
         # equal character in the environment variable value
-        newenv = os.environ.copy()
+        newenv = dict(os.environ)
         newenv["FRUIT"] = "orange=lemon"
         with subprocess.Popen([sys.executable, "-c",
                                'import sys, os;'
@@ -1615,7 +1615,7 @@ class RunFuncTestCase(BaseTestCase):
         self.assertEqual(c.exception.stdout, b'BDFL')
 
     def test_run_kwargs(self):
-        newenv = os.environ.copy()
+        newenv = dict(os.environ)
         newenv["FRUIT"] = "banana"
         cp = self.run_python(('import sys, os;'
                       'sys.exit(33 if os.getenv("FRUIT")=="banana" else 31)'),
@@ -2214,7 +2214,7 @@ class POSIXProcessTestCase(BaseTestCase):
 
     def test_shell_sequence(self):
         # Run command through the shell (sequence)
-        newenv = os.environ.copy()
+        newenv = dict(os.environ)
         newenv["FRUIT"] = "apple"
         p = subprocess.Popen(["echo $FRUIT"], shell=1,
                              stdout=subprocess.PIPE,
@@ -2224,7 +2224,7 @@ class POSIXProcessTestCase(BaseTestCase):
 
     def test_shell_string(self):
         # Run command through the shell (string)
-        newenv = os.environ.copy()
+        newenv = dict(os.environ)
         newenv["FRUIT"] = "apple"
         p = subprocess.Popen("echo $FRUIT", shell=1,
                              stdout=subprocess.PIPE,
@@ -2600,7 +2600,7 @@ class POSIXProcessTestCase(BaseTestCase):
 
             # test str with surrogates
             script = "import os; print(ascii(os.getenv(%s)))" % repr(key)
-            env = os.environ.copy()
+            env = dict(os.environ)
             env[key] = value
             # Use C locale to get ASCII for the locale encoding to force
             # surrogate-escaping of \xFF in the child process
@@ -2615,7 +2615,7 @@ class POSIXProcessTestCase(BaseTestCase):
             # test bytes
             key = key.encode("ascii", "surrogateescape")
             script = "import os; print(ascii(os.getenvb(%s)))" % repr(key)
-            env = os.environ.copy()
+            env = dict(os.environ)
             env[key] = encoded_value
             stdout = subprocess.check_output(
                 [sys.executable, "-c", script],
@@ -2639,7 +2639,7 @@ class POSIXProcessTestCase(BaseTestCase):
         self.assertEqual(exitcode, 0)
 
         # bytes program, unicode PATH
-        env = os.environ.copy()
+        env = dict(os.environ)
         env["PATH"] = path
         exitcode = subprocess.call([program]+args, env=env)
         self.assertEqual(exitcode, 0)
@@ -3412,7 +3412,7 @@ class Win32ProcessTestCase(BaseTestCase):
 
     def test_shell_sequence(self):
         # Run command through the shell (sequence)
-        newenv = os.environ.copy()
+        newenv = dict(os.environ)
         newenv["FRUIT"] = "physalis"
         p = subprocess.Popen(["set"], shell=1,
                              stdout=subprocess.PIPE,
@@ -3422,7 +3422,7 @@ class Win32ProcessTestCase(BaseTestCase):
 
     def test_shell_string(self):
         # Run command through the shell (string)
-        newenv = os.environ.copy()
+        newenv = dict(os.environ)
         newenv["FRUIT"] = "physalis"
         p = subprocess.Popen("set", shell=1,
                              stdout=subprocess.PIPE,
@@ -3433,7 +3433,7 @@ class Win32ProcessTestCase(BaseTestCase):
     def test_shell_encodings(self):
         # Run command through the shell (string)
         for enc in ['ansi', 'oem']:
-            newenv = os.environ.copy()
+            newenv = dict(os.environ)
             newenv["FRUIT"] = "physalis"
             p = subprocess.Popen("set", shell=1,
                                  stdout=subprocess.PIPE,

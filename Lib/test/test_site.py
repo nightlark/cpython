@@ -215,13 +215,13 @@ class HelperFunctionsTests(unittest.TestCase):
         usersite = site.USER_SITE
         self.assertIn(usersite, sys.path)
 
-        env = os.environ.copy()
+        env = dict(os.environ)
         rc = subprocess.call([sys.executable, '-c',
             'import sys; sys.exit(%r in sys.path)' % usersite],
             env=env)
         self.assertEqual(rc, 1)
 
-        env = os.environ.copy()
+        env = dict(os.environ)
         rc = subprocess.call([sys.executable, '-s', '-c',
             'import sys; sys.exit(%r in sys.path)' % usersite],
             env=env)
@@ -230,7 +230,7 @@ class HelperFunctionsTests(unittest.TestCase):
         else:
             self.assertEqual(rc, 0, "User site still added to path with -s")
 
-        env = os.environ.copy()
+        env = dict(os.environ)
         env["PYTHONNOUSERSITE"] = "1"
         rc = subprocess.call([sys.executable, '-c',
             'import sys; sys.exit(%r in sys.path)' % usersite],
@@ -241,7 +241,7 @@ class HelperFunctionsTests(unittest.TestCase):
             self.assertEqual(rc, 0,
                         "User site still added to path with PYTHONNOUSERSITE")
 
-        env = os.environ.copy()
+        env = dict(os.environ)
         env["PYTHONUSERBASE"] = "/tmp"
         rc = subprocess.call([sys.executable, '-c',
             'import sys, site; sys.exit(site.USER_BASE.startswith("/tmp"))'],
@@ -604,7 +604,7 @@ class _pthFileTests(unittest.TestCase):
             os.path.dirname(exe_file),
             pth_lines)
 
-        env = os.environ.copy()
+        env = dict(os.environ)
         env['PYTHONPATH'] = 'from-env'
         env['PATH'] = '{};{}'.format(exe_prefix, os.getenv('PATH'))
         output = subprocess.check_output([exe_file, '-c',
@@ -629,7 +629,7 @@ class _pthFileTests(unittest.TestCase):
             'import site'
         ])
         sys_prefix = os.path.dirname(exe_file)
-        env = os.environ.copy()
+        env = dict(os.environ)
         env['PYTHONPATH'] = 'from-env'
         env['PATH'] = '{};{}'.format(exe_prefix, os.getenv('PATH'))
         rc = subprocess.call([exe_file, '-c',
@@ -654,7 +654,7 @@ class _pthFileTests(unittest.TestCase):
             'import site'
         ], exe_pth=False)
         sys_prefix = os.path.dirname(exe_file)
-        env = os.environ.copy()
+        env = dict(os.environ)
         env['PYTHONPATH'] = 'from-env'
         env['PATH'] = '{};{}'.format(exe_prefix, os.getenv('PATH'))
         rc = subprocess.call([exe_file, '-c',

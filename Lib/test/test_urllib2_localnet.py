@@ -331,7 +331,7 @@ class ProxyAuthTests(unittest.TestCase):
         def restore_environ(old_environ):
             os.environ.clear()
             os.environ.update(old_environ)
-        self.addCleanup(restore_environ, os.environ.copy())
+        self.addCleanup(restore_environ, dict(os.environ))
         os.environ['NO_PROXY'] = ''
         os.environ['no_proxy'] = ''
 
@@ -457,7 +457,7 @@ class TestUrlopen(unittest.TestCase):
         def restore_environ(old_environ):
             os.environ.clear()
             os.environ.update(old_environ)
-        self.addCleanup(restore_environ, os.environ.copy())
+        self.addCleanup(restore_environ, dict(os.environ))
         os.environ['NO_PROXY'] = '*'
         os.environ['no_proxy'] = '*'
 

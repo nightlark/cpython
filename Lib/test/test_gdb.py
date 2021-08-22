@@ -92,7 +92,7 @@ def run_gdb(*args, **env_vars):
     Returns its (stdout, stderr) decoded from utf-8 using the replace handler.
     """
     if env_vars:
-        env = os.environ.copy()
+        env = dict(os.environ)
         env.update(env_vars)
     else:
         env = None

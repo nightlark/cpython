@@ -81,7 +81,7 @@ class EnsurepipMixin:
         self.addCleanup(os_patch.stop)
         patched_os.devnull = real_devnull
         patched_os.path = os.path
-        self.os_environ = patched_os.environ = os.environ.copy()
+        self.os_environ = patched_os.environ = dict(os.environ)
 
 
 class TestBootstrap(EnsurepipMixin, unittest.TestCase):

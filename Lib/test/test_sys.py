@@ -723,7 +723,7 @@ class SysModuleTest(unittest.TestCase):
 
     def c_locale_get_error_handler(self, locale, isolated=False, encoding=None):
         # Force the POSIX locale
-        env = os.environ.copy()
+        env = dict(os.environ)
         env["LC_ALL"] = locale
         env["PYTHONCOERCECLOCALE"] = "0"
         code = '\n'.join((

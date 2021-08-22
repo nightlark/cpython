@@ -117,7 +117,7 @@ def run_python_until_end(*args, **env_vars):
     else:
         # Need to preserve the original environment, for in-place testing of
         # shared library builds.
-        env = os.environ.copy()
+        env = dict(os.environ)
 
     # set TERM='' unless the TERM environment variable is passed explicitly
     # see issues #11390 and #18300

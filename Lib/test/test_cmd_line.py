@@ -169,7 +169,7 @@ class CmdLineTest(unittest.TestCase):
                      'Windows has a native unicode API')
     def test_undecodable_code(self):
         undecodable = b"\xff"
-        env = os.environ.copy()
+        env = dict(os.environ)
         # Use C locale to get ascii for the locale encoding
         env['LC_ALL'] = 'C'
         env['PYTHONCOERCECLOCALE'] = '0'
@@ -254,7 +254,7 @@ class CmdLineTest(unittest.TestCase):
         decoded = text.decode('utf-8', 'surrogateescape')
         expected = ascii(decoded).encode('ascii') + b'\n'
 
-        env = os.environ.copy()
+        env = dict(os.environ)
         # C locale gives ASCII locale encoding, but Python uses UTF-8
         # to parse the command line arguments on Mac OS X and Android.
         env['LC_ALL'] = 'C'
@@ -342,7 +342,7 @@ class CmdLineTest(unittest.TestCase):
 
     def test_displayhook_unencodable(self):
         for encoding in ('ascii', 'latin-1', 'utf-8'):
-            env = os.environ.copy()
+            env = dict(os.environ)
             env['PYTHONIOENCODING'] = encoding
             p = subprocess.Popen(
                 [sys.executable, '-i'],

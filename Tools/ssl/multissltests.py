@@ -235,7 +235,7 @@ class AbstractBuilder(object):
     def _subprocess_output(self, cmd, env=None, **kwargs):
         log.debug("Call '{}'".format(" ".join(cmd)))
         if env is None:
-            env = os.environ.copy()
+            env = dict(os.environ)
             env["LD_LIBRARY_PATH"] = self.lib_dir
         out = subprocess.check_output(cmd, env=env, **kwargs)
         return out.strip().decode("utf-8")
@@ -297,7 +297,7 @@ class AbstractBuilder(object):
             "--prefix={}".format(self.install_dir)
         ]
         # cmd.extend(["no-deprecated", "--api=1.1.0"])
-        env = os.environ.copy()
+        env = dict(os.environ)
         # set rpath
         env["LD_RUN_PATH"] = self.lib_dir
         if self.system:
@@ -350,7 +350,7 @@ class AbstractBuilder(object):
                     os.unlink(os.path.join(root, filename))
 
         # overwrite header and library search paths
-        env = os.environ.copy()
+        env = dict(os.environ)
         env["CPPFLAGS"] = "-I{}".format(self.include_dir)
         env["LDFLAGS"] = "-L{}".format(self.lib_dir)
         # set rpath

@@ -228,7 +228,7 @@ class TestTopologicalSort(unittest.TestCase):
                 ts.add('bluch', 'hola', 'abcde', 'a', 'b')
                 print(list(ts.static_order()))
                 """
-            env = os.environ.copy()
+            env = dict(os.environ)
             # signal to assert_python not to do a copy
             # of os.environ on its own
             env["__cleanenv"] = True

@@ -1216,7 +1216,7 @@ class EnvironTests(mapping_tests.BasicTestMappingProtocol):
         self._test_underlying_process_env(overridden_key, '3')
 
     def test_ior_operator_invalid_dicts(self):
-        os_environ_copy = os.environ.copy()
+        os_environ_copy = dict(os.environ)
         with self.assertRaises(TypeError):
             dict_with_bad_key = {1: '_A_'}
             os.environ |= dict_with_bad_key
@@ -2034,19 +2034,19 @@ class ExecTests(unittest.TestCase):
         args = [sys.executable, '-c', 'pass']
 
         # null character in the environment variable name
-        newenv = os.environ.copy()
+        newenv = dict(os.environ)
         newenv["FRUIT\0VEGETABLE"] = "cabbage"
         with self.assertRaises(ValueError):
             os.execve(args[0], args, newenv)
 
         # null character in the environment variable value
-        newenv = os.environ.copy()
+        newenv = dict(os.environ)
         newenv["FRUIT"] = "orange\0VEGETABLE=cabbage"
         with self.assertRaises(ValueError):
             os.execve(args[0], args, newenv)
 
         # equal character in the environment variable name
-        newenv = os.environ.copy()
+        newenv = dict(os.environ)
         newenv["FRUIT=ORANGE"] = "lemon"
         with self.assertRaises(ValueError):
             os.execve(args[0], args, newenv)
@@ -3125,7 +3125,7 @@ class SpawnTests(unittest.TestCase):
         args = [sys.executable, '-c', 'pass']
 
         # null character in the environment variable name
-        newenv = os.environ.copy()
+        newenv = dict(os.environ)
         newenv["FRUIT\0VEGETABLE"] = "cabbage"
         try:
             exitcode = spawn(os.P_WAIT, args[0], args, newenv)
@@ -3135,7 +3135,7 @@ class SpawnTests(unittest.TestCase):
             self.assertEqual(exitcode, 127)
 
         # null character in the environment variable value
-        newenv = os.environ.copy()
+        newenv = dict(os.environ)
         newenv["FRUIT"] = "orange\0VEGETABLE=cabbage"
         try:
             exitcode = spawn(os.P_WAIT, args[0], args, newenv)
@@ -3145,7 +3145,7 @@ class SpawnTests(unittest.TestCase):
             self.assertEqual(exitcode, 127)
 
         # equal character in the environment variable name
-        newenv = os.environ.copy()
+        newenv = dict(os.environ)
         newenv["FRUIT=ORANGE"] = "lemon"
         try:
             exitcode = spawn(os.P_WAIT, args[0], args, newenv)
@@ -3162,7 +3162,7 @@ class SpawnTests(unittest.TestCase):
                      'if os.getenv("FRUIT") != "orange=lemon":\n'
                      '    raise AssertionError')
         args = [sys.executable, filename]
-        newenv = os.environ.copy()
+        newenv = dict(os.environ)
         newenv["FRUIT"] = "orange=lemon"
         exitcode = spawn(os.P_WAIT, args[0], args, newenv)
         self.assertEqual(exitcode, 0)

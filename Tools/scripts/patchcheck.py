@@ -78,7 +78,7 @@ def get_git_remote_default_branch(remote_name):
     It is typically called 'main', but may differ
     """
     cmd = "git remote show {}".format(remote_name).split()
-    env = os.environ.copy()
+    env = dict(os.environ)
     env['LANG'] = 'C'
     try:
         remote_info = subprocess.check_output(cmd,

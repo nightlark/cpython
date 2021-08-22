@@ -175,7 +175,7 @@ class HashRandomizationTests:
         return 'print(hash(eval(%a)))' % repr_
 
     def get_hash(self, repr_, seed=None):
-        env = os.environ.copy()
+        env = dict(os.environ)
         env['__cleanenv'] = True  # signal to assert_python not to do a copy
                                   # of os.environ on its own
         if seed is not None:

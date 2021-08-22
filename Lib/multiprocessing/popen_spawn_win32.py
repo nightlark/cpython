@@ -62,7 +62,7 @@ class Popen(object):
         # executor and launch our base Python.
         if WINENV and _path_eq(python_exe, sys.executable):
             python_exe = sys._base_executable
-            env = os.environ.copy()
+            env = dict(os.environ)
             env["__PYVENV_LAUNCHER__"] = sys.executable
         else:
             env = None

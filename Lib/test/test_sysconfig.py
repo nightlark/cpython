@@ -317,7 +317,7 @@ class TestSysConfig(unittest.TestCase):
 
         # Test without MACOSX_DEPLOYMENT_TARGET in the environment
 
-        env = os.environ.copy()
+        env = dict(os.environ)
         if 'MACOSX_DEPLOYMENT_TARGET' in env:
             del env['MACOSX_DEPLOYMENT_TARGET']
 
@@ -337,7 +337,7 @@ class TestSysConfig(unittest.TestCase):
 
         # Test with MACOSX_DEPLOYMENT_TARGET in the environment, and
         # using a value that is unlikely to be the default one.
-        env = os.environ.copy()
+        env = dict(os.environ)
         env['MACOSX_DEPLOYMENT_TARGET'] = '10.1'
 
         p = subprocess.Popen([

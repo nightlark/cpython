@@ -426,7 +426,7 @@ class FaultHandlerTests(unittest.TestCase):
         args = filter(None, (sys.executable,
                              "-E" if sys.flags.ignore_environment else "",
                              "-X", "faulthandler", "-c", code))
-        env = os.environ.copy()
+        env = dict(os.environ)
         env.pop("PYTHONFAULTHANDLER", None)
         # don't use assert_python_ok() because it always enables faulthandler
         output = subprocess.check_output(args, env=env)

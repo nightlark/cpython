@@ -56,7 +56,7 @@ def extract_pip_files(ns):
     if os.environ.get("PYTHONPATH"):
         search_path += ";" + os.environ["PYTHONPATH"]
 
-    env = os.environ.copy()
+    env = dict(os.environ)
     env["PYTHONPATH"] = search_path
 
     output = subprocess.check_output(
