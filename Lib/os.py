@@ -25,6 +25,8 @@ and opendir), and leave all pathname manipulation to os.path
 import abc
 import sys
 import stat as st
+import copy
+import warnings
 
 from _collections_abc import _check_methods
 
@@ -710,7 +712,14 @@ class _Environ(MutableMapping):
         return f"environ({{{formatted_items}}})"
 
     def copy(self):
+        warnings.warn("os.environ.copy() is deprecated as of 3.11. Use dict(os.environ) or create an alias instead.",
+                      DeprecationWarning, stacklevel=2)
         return dict(self)
+
+    def __copy__(self):
+        warnings.warn("copy(os.environ) is deprecated as of 3.11. Use dict(os.environ) or create an alias instead.",
+                      DeprecationWarning, stacklevel=2)
+        return self
 
     def setdefault(self, key, value):
         if key not in self:
